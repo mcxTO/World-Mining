@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earth Wallet - Login</title>
+    <style>
+        /* Reset and base styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            color: white;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to bottom, #87CEFA, #4682B4);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            overflow: hidden;
+        }
+
+        /* Background image of hills */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://source.unsplash.com/1920x1080/?hills,sunny') no-repeat center center/cover;
+            z-index: -1;
+            filter: brightness(0.8);
+        }
+
+        /* Main container */
+        .login-container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.65);
+            border-radius: 12px;
+            padding: 30px 20px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Header styles */
+        .login-container h1 {
+            margin: 0;
+            font-size: 26px;
+            color: #FFD700;
+            margin-bottom: 10px;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
+        }
+
+        .login-container p {
+            margin-bottom: 20px;
+            color: #DDDDDD;
+        }
+
+        /* Button styles */
+        .login-button {
+            background: #FFD700;
+            color: black;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin: 10px 0;
+        }
+
+        .login-button:hover {
+            background: #FFC300;
+        }
+
+        /* Wallet ID display */
+        .wallet-info {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #BBBBBB;
+        }
+
+        /* Footer branding */
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #AAAAAA;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Welcome to Earth Wallet</h1>
+        <p>Securely access your wallet to explore, mine, and manage your coins.</p>
+        <button class="login-button" id="connect-wallet">Connect Earth Wallet</button>
+        <div class="wallet-info" id="wallet-info"></div>
+        <div class="footer">Powered by Earth Wallet</div>
+    </div>
+
+    <script>
+        const connectWalletButton = document.getElementById('connect-wallet');
+        const walletInfo = document.getElementById('wallet-info');
+
+        // Simulated login/signup function
+        connectWalletButton.addEventListener('click', () => {
+            const savedWallet = localStorage.getItem('walletID');
+            if (savedWallet) {
+                // Simulate successful wallet connection
+                walletInfo.innerHTML = `
+                    <p><strong>Connected Wallet:</strong></p>
+                    <p>${savedWallet}</p>
+                `;
+                connectWalletButton.textContent = "Wallet Connected";
+                connectWalletButton.disabled = true;
+                syncProgress(savedWallet);
+            } else {
+                // Simulate wallet creation
+                const newWallet = generateWalletID();
+                localStorage.setItem('walletID', newWallet);
+                initializeProgress(newWallet); // Initialize user progress
+                walletInfo.innerHTML = `
+                    <p><strong>New Wallet Created!</strong></p>
+                    <p>${newWallet}</p>
+                    <p><strong>Note:</strong> Save your wallet ID securely!</p>
+                `;
+                connectWalletButton.textContent = "Wallet Connected";
+                connectWalletButton.disabled = true;
+            }
+        });
+
+        // Generate a unique wallet ID
+        function generateWalletID() {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            let walletID = "EARTH_";
+            for (let i = 0; i < 44; i++) {
+                walletID += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return walletID;
+        }
+
+        // Initialize new user's progress
+        function initializeProgress(walletID) {
+            const defaultProgress = {
+                walletID: walletID,
+                minedCoins: 0,
+                totalCoins: 0,
+                lastLogin: new Date().toISOString()
+            };
+            localStorage.setItem("progress", JSON.stringify(defaultProgress));
+            console.log("New progress initialized:", defaultProgress);
+        }
+
+        // Sync progress when wallet is connected
+        function syncProgress(walletID) {
+            const progress = JSON.parse(localStorage.getItem("progress"));
+            if (progress && progress.walletID === walletID) {
+                console.log("Progress synced successfully:", progress);
+                alert(`Welcome back! Coins mined: ${progress.minedCoins}, Total: ${progress.totalCoins}`);
+            } else {
+                console.log("No progress found. Initializing new...");
+                initializeProgress(walletID);
+            }
+        }
+    </script>
+</body>
+</html>
