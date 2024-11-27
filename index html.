@@ -3,39 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Earth Mining Game</title>
+    <title>Earth Mining</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Halaman Login / Create Wallet -->
+    <div id="language-selector">
+        <label for="language">Choose Language:</label>
+        <select id="language" onchange="changeLanguage()">
+            <option value="en">English</option>
+            <option value="id">Bahasa Indonesia</option>
+        </select>
+    </div>
+
+    <!-- Login Page -->
     <div id="login-page">
-        <h1>Welcome to Earth Mining</h1>
-        <button onclick="loginPage()">Login</button>
-        <button onclick="createWallet()">Create Wallet</button>
+        <h1 id="title"></h1>
+        <p id="description"></p>
+        <button id="create-wallet-btn" onclick="createWallet()"></button>
     </div>
 
-    <!-- Halaman Gameplay -->
+    <!-- Gameplay Page -->
     <div id="gameplay-page" class="hidden">
-        <h2>Welcome to Earth Mining</h2>
-        <p id="wallet-address">Wallet Address: Not logged in</p>
-        <p id="coin-balance">Balance: 0</p>
-        <p id="total-supply">Total Supply: 10000000000 Coins</p>
-        <button onclick="collectCoin()">Mine Coin</button>
-        <button onclick="sendCoin()">Send Coins</button>
+        <h1 id="gameplay-title"></h1>
+        <div id="wallet-address"></div>
+        <div id="coin-balance"></div>
+        <div id="total-supply"></div>
+        <div class="universe">
+            <div id="planet" onclick="mineCoin()"></div>
+        </div>
+        <button id="send-coins-btn" onclick="openSendPage()"></button>
     </div>
 
-    <!-- Halaman Kirim Coin -->
-    <div id="send-coin" class="hidden">
-        <h2>Send Coins</h2>
-        <label for="recipient-address">Recipient Address:</label>
-        <input type="text" id="recipient-address">
-        <label for="send-amount">Amount to Send:</label>
-        <input type="number" id="send-amount">
-        <button onclick="processTransaction()">Send</button>
-        <button onclick="cancelTransaction()">Cancel</button>
+    <!-- Send Coins Page -->
+    <div id="send-coin-page" class="hidden">
+        <h1 id="send-title"></h1>
+        <input type="text" id="recipient-address" placeholder="Recipient Address">
+        <input type="number" id="send-amount" placeholder="Amount to Send">
+        <button id="send-coin-btn" onclick="sendCoins()"></button>
+        <button id="cancel-btn" onclick="cancelSend()"></button>
     </div>
 
-    <script src="https://crypto-js.googlecode.com/svn/tags/3.1.9-1/build/rollups/aes.js"></script>
-    <script src="js/app.js"></script>
+    <script src="lang.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
