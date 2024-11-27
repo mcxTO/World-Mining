@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coin Gameplay</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            color: #fff;
+            background: radial-gradient(circle at center, #001f3f, #000);
+        }
+        .header-info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            line-height: 1.5;
+            z-index: 1000;
+        }
+        .header-info div {
+            margin-bottom: 5px;
+        }
+        .header-info span {
+            font-weight: bold;
+            color: #00ff00;
+        }
+        #gameCanvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+        .claim-button {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 30px;
+            font-size: 18px;
+            background: #0074D9;
+            border: none;
+            border-radius: 25px;
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 0 0 10px #0074D9;
+            transition: transform 0.2s, box-shadow 0.2s;
+            z-index: 1000;
+        }
+        .claim-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px #0074D9;
+        }
+        .claim-button:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+    <div class="header-info">
+        <div>Total Coins Available: <span id="total-coins">10000000000000</span></div>
+        <div>Wallet Balance: <span id="wallet-balance">0</span></div>
+    </div>
+    <canvas id="gameCanvas"></canvas>
+    <button class="claim-button" onclick="claimCoin()">Claim Coin</button>
+
+    <script>
+        const totalSupply = 10_000_000_000_000;
+        let walletBalance = 0;
+        const coins = new Set();
+        let hashState = '';
+        const totalCoinsElement = document.getElementById('total-coins');
+        const walletBalanceElement = document.getElementById('wallet-balance');
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const stars = [];
+        const planets = [];
+        let coinParticles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        // ** Generate unique coin IDs **
+        function generateUniqueCoinID() {
+            const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let id;
+            do {
+                id = '';
+                for (let i = 0; i < 50; i++) {
+                    id += charset[Math.floor(Math.random() * charset.length)];
+                }
+            } while (coins.has(id));
+            coins.add(id);
+            return id;
+        }
+
+        // ** Calculate hash for validation **
+        async function calculateHash() {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(JSON.stringify([...coins]) + walletBalance);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            return Array.from(new Uint8Array(hashBuffer))
+                .map(byte => byte.toString(16).padStart(2, '0'))
+                .join('');
+        }
+
+        // ** Claim coin function **
+        async function claimCoin() {
+            if (coins.size >= totalSupply) {
+                alert('All coins have been claimed!');
+                return;
+            }
+            const coinID = generateUniqueCoinID();
+            walletBalance++;
+            walletBalanceElement.textContent = walletBalance;
+            totalCoinsElement.textContent = totalSupply - coins.size;
+
+            hashState = await calculateHash();
+            spawnCoinParticles(); // Tambahkan efek partikel saat klaim
+            console.log(`Coin claimed! ID: ${coinID}`);
+        }
+
+        // ** Spawn coin particles for animation effect **
+        function spawnCoinParticles() {
+            for (let i = 0; i < 20; i++) {
+                coinParticles.push({
+                    x: canvas.width / 2,
+                    y: canvas.height - 50,
+                    size: Math.random() * 10 + 5,
+                    speedX: Math.random() * 4 - 2,
+                    speedY: Math.random() * -4 - 1,
+                    alpha: 1,
+                });
+            }
+        }
+
+        // ** Draw background with stars and planets **
+        function drawBackground() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#001f3f';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            drawStars();
+            drawPlanets();
+            drawCoinParticles();
+        }
+
+        function drawStars() {
+            if (stars.length === 0) {
+                for (let i = 0; i < 100; i++) {
+                    stars.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        size: Math.random() * 2 + 1,
+                        speed: Math.random() * 0.5 + 0.2,
+                    });
+                }
+            }
+            ctx.fillStyle = '#fff';
+            stars.forEach(star => {
+                star.y += star.speed;
+                if (star.y > canvas.height) star.y = 0;
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function drawPlanets() {
+            if (planets.length === 0) {
+                for (let i = 0; i < 3; i++) {
+                    planets.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height
