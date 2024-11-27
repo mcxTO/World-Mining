@@ -3,135 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Page</title>
-    <style>
-        /* Styles for the main page */
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            font-family: Arial, sans-serif;
-            background: radial-gradient(circle at center, #020024, #090979, #000);
-            color: white;
-            text-align: center;
-        }
-
-        .container {
-            position: relative;
-            height: 100vh;
-            width: 100vw;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .planet {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: radial-gradient(circle, #ffd700, #b8860b);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.6);
-            animation: rotate 10s linear infinite;
-        }
-
-        .stars {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: transparent;
-            overflow: hidden;
-        }
-
-        .star {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 2s infinite alternate;
-        }
-
-        @keyframes rotate {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes twinkle {
-            0% {
-                opacity: 0.5;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-        .button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: linear-gradient(45deg, #ff7300, #ff003c);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .button:hover {
-            transform: scale(1.1);
-        }
-
-        .description {
-            margin-top: 20px;
-            padding: 0 20px;
-            font-size: 18px;
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.5;
-            max-width: 600px;
-            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8);
-        }
-    </style>
+    <title>Earth Mining Game</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="planet"></div>
-        <div class="description">
-            <p>
-                Welcome to the world of exploration. Tap the "Play" button to begin your adventure!
-            </p>
-        </div>
-        <button class="button" onclick="goToGame()">Play</button>
+    <!-- Halaman Login / Create Wallet -->
+    <div id="login-page">
+        <h1>Welcome to Earth Mining</h1>
+        <button onclick="loginPage()">Login</button>
+        <button onclick="createWallet()">Create Wallet</button>
     </div>
 
-    <!-- Star background -->
-    <div class="stars">
-        <!-- Random stars -->
-        <script>
-            const stars = document.querySelector('.stars');
-            for (let i = 0; i < 200; i++) {
-                const star = document.createElement('div');
-                star.classList.add('star');
-                star.style.top = `${Math.random() * 100}%`;
-                star.style.left = `${Math.random() * 100}%`;
-                star.style.animationDelay = `${Math.random() * 2}s`;
-                star.style.animationDuration = `${1 + Math.random()}s`;
-                stars.appendChild(star);
-            }
-        </script>
+    <!-- Halaman Gameplay -->
+    <div id="gameplay-page" class="hidden">
+        <h2>Welcome to Earth Mining</h2>
+        <p id="wallet-address">Wallet Address: Not logged in</p>
+        <p id="coin-balance">Balance: 0</p>
+        <p id="total-supply">Total Supply: 10000000000 Coins</p>
+        <button onclick="collectCoin()">Mine Coin</button>
+        <button onclick="sendCoin()">Send Coins</button>
     </div>
 
-    <script>
-        // Function to navigate to the game page
-        function goToGame() {
-            window.location.href = "page2.html"; // Make sure the page2.html is created
-        }
-    </script>
+    <!-- Halaman Kirim Coin -->
+    <div id="send-coin" class="hidden">
+        <h2>Send Coins</h2>
+        <label for="recipient-address">Recipient Address:</label>
+        <input type="text" id="recipient-address">
+        <label for="send-amount">Amount to Send:</label>
+        <input type="number" id="send-amount">
+        <button onclick="processTransaction()">Send</button>
+        <button onclick="cancelTransaction()">Cancel</button>
+    </div>
+
+    <script src="https://crypto-js.googlecode.com/svn/tags/3.1.9-1/build/rollups/aes.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
