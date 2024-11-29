@@ -1,3 +1,7 @@
+const totalSupply = 10000000000000;
+let minedCoins = 0;
+let coinBalance = 0;
+
 const translations = {
     en: {
         title: "Earth Mining",
@@ -29,30 +33,47 @@ const translations = {
     }
 };
 
+function updateRemainingCoins() {
+    const remainingCoins = totalSupply - minedCoins;
+    document.getElementById('remaining-coins-value').innerText = remainingCoins.toLocaleString();
+}
+
+function mineCoin() {
+    minedCoins += 100;
+    if (minedCoins > totalSupply) minedCoins = totalSupply;
+    updateRemainingCoins();
+}
+
+function sendCoins() {
+    const recipient = document.getElementById('recipient-address').value;
+    const amount = parseInt(document.getElementById('send-amount').value);
+
+    if (!recipient || isNaN(amount) || amount <= 0 || amount > coinBalance) {
+        alert('Invalid transaction details!');
+        return;
+    }
+
+    coinBalance -= amount;
+    updateBalanceDisplay();
+}
+
+function updateBalanceDisplay() {
+    document.getElementById('coin-balance').innerText = `Coin Balance: ${coinBalance}`;
+}
+
 function changeLanguage() {
     const selectedLang = document.getElementById('language').value;
     const t = translations[selectedLang];
-
     document.getElementById('title').innerText = t.title;
     document.getElementById('description').innerText = t.description;
-    document.getElementById('create-wallet-btn').innerText = t.createWalletBtn;
     document.getElementById('gameplay-title').innerText = t.gameplayTitle;
     document.getElementById('send-coins-btn').innerText = t.sendCoinsBtn;
-    document.getElementById('send-title').innerText = t.sendTitle;
     document.getElementById('recipient-address').placeholder = t.recipientPlaceholder;
     document.getElementById('send-amount').placeholder = t.amountPlaceholder;
     document.getElementById('send-coin-btn').innerText = t.sendCoinBtn;
-    document.getElementById('cancel-btn').innerText = t.cancelBtn;
-
-    updateDynamicText(t);
 }
 
-function updateDynamicText(t) {
-    const balance = document.getElementById('coin-balance').dataset.balance || 0;
-    const supply = document.getElementById('total-supply').dataset.supply || 10000000;
-
-    document.getElementById('coin-balance').innerText = `${t.coinBalance} ${balance}`;
-    document.getElementById('total-supply').innerText = `${t.totalSupply} ${supply}`;
-}
-
-document.addEventListener('DOMContentLoaded', changeLanguage);
+document.addEventListener('DOMContentLoaded', updateRemainingCoins);
+document.getElementById('mine-btn').addEventListener('click', mineCoin);
+document.getElementById('send-coin-btn').addEventListener('click', sendCoins);
+document.getElementById('language').addEventListener('change', changeLanguage);
