@@ -1,0 +1,20 @@
+const { ethers } = require("ethers");
+
+const contractAddress = "your_contract_address";
+const contractABI = [
+    // ABI of your smart contract here
+];
+
+async function sendTransactionToBlockchain(amount, recipient) {
+    const provider = new ethers.JsonRpcProvider("https://polygon-rpc.com");
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(contractAddress, contractABI, signer);
+
+    try {
+        const tx = await contract.transfer(recipient, ethers.utils.parseUnits(amount.toString(), 18));
+        await tx.wait();
+        console.log('Transaction successful');
+    } catch (error) {
+        console.error('Transaction failed', error);
+    }
+}
