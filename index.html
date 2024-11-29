@@ -1,34 +1,57 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Penambangan Bumi</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Earth Mining</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div>
-        <h1 id="title">Penambangan Bumi</h1>
-        <p id="description">Mulailah menambang koin Anda dengan mengetuk Bumi!</p>
-        <button id="mine-btn">Tambang Koin</button>
-        <p id="remaining-coins">Sisa Koin yang Bisa Ditambang: <span id="remaining-coins-value"></span></p>
-        <hr>
-        <h2 id="gameplay-title">Permainan Penambangan Bumi</h2>
-        <div>
-            <p id="coin-balance">Saldo Koin: 0</p>
-            <button id="send-coins-btn">Kirim Koin</button>
-            <div>
-                <input type="text" id="recipient-address" placeholder="Alamat Dompet Penerima">
-                <input type="number" id="send-amount" placeholder="Jumlah untuk Dikirim">
-                <button id="send-coin-btn">Kirim</button>
-            </div>
+    <div id="login-page">
+        <h1 id="title"></h1>
+        <p id="description"></p>
+        <button id="create-wallet-btn" onclick="createWallet()"></button>
+        <select id="language" onchange="changeLanguage()">
+            <option value="en">English</option>
+            <option value="id">Bahasa Indonesia</option>
+        </select>
+    </div>
+
+    <div id="gameplay-page" class="hidden">
+        <h1 id="gameplay-title"></h1>
+        <div id="wallet-address"></div>
+        <div id="coin-balance"></div>
+        <div id="total-supply"></div>
+        <div class="universe">
+            <div id="planet" onclick="mineCoin()"></div>
         </div>
-        <div>
-            <select id="language">
-                <option value="id">Bahasa Indonesia</option>
-                <option value="en">English</option>
-            </select>
-        </div>
-        <script src="script.js"></script>
+        <button id="send-coins-btn" onclick="openSendPage()"></button>
+    </div>
+
+    <div id="send-coin-page" class="hidden">
+        <h1 id="send-title"></h1>
+        <input type="text" id="recipient-address" placeholder="Recipient Wallet Address">
+        <input type="number" id="send-amount" placeholder="Amount to Send">
+        <button id="send-coin-btn" onclick="sendCoins()"></button>
+        <button id="cancel-btn" onclick="cancelSend()"></button>
+    </div>
+
+    <div id="roadmap-page" class="hidden">
+        <h1>Roadmap</h1>
+        <ul>
+            <li>Web Development</li>
+            <li>Wallet Development</li>
+            <li>Testnet Mining</li>
+            <li>Blockchain Integration</li>
+        </ul>
+    </div>
+
+    <div id="donation-page" class="hidden">
+        <h1>Open Donation</h1>
+        <p>To fund this project development and blockchain integration, you can donate using Crypto.</p>
+        <button>Donate with Crypto</button>
+    </div>
+
+    <script src="app.js"></script>
 </body>
 </html>
